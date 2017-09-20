@@ -233,7 +233,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <version>${docker.plugin.version}</version>
@@ -251,7 +251,7 @@
           <tag>gene42-phenotips-core-${project.version}</tag>
           <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
 </project>

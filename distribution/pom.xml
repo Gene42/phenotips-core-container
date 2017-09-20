@@ -26,5 +26,6 @@
 
   <modules>
     <module>war</module>
+    <module>docker</module>
   </modules>
 </project>

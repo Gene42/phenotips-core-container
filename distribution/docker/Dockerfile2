@@ -3,18 +3,23 @@ FROM ubuntu:17.04
 MAINTAINER Sebastian Stanisor <sebastain@gene42.com>
 
 ENV TOMCAT_HOME /var/lib/tomcat8
-#ENV PATH $CATALINA_HOME/bin:$PATH
-#RUN mkdir -p "$CATALINA_HOME"
+ENV CATALINA_HOME /usr/local/tomcat
+ENV PATH $CATALINA_HOME/bin:$PATH
+RUN mkdir -p "$CATALINA_HOME"
+ENV GPG_KEYS
+
+
+ENV TOMCAT_VERSION 8.5.20
+ENV TOMCAT_URL "http://apache.mirror.vexxhost.com/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.zip"
 USER root
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y apt-utils openjdk-8-jdk tomcat8 unzip
+RUN apt-get update && apt-get install -y openjdk-8-jdk unzip wget openssl gpg2
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN rm -rf $TOMCAT_HOME/webapps/ROOT
 RUN mkdir -p $TOMCAT_HOME/webapps/ROOT
 
-RUN chown tomcat8:tomcat8 -R /var/lib/tomcat8
-
-USER tomcat8
 
 WORKDIR $TOMCAT_HOME
 COPY target/solr-configuration.jar ./
@@ -27,9 +32,13 @@ WORKDIR $TOMCAT_HOME/webapps/ROOT
 RUN unzip gene42-phenotips-core.war
 RUN rm gene42-phenotips-core.war
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN chown tomcat8:tomcat8 -R /var/lib/tomcat8/webapps/ROOT
+RUN chown tomcat8:tomcat8 -R /var/lib/tomcat8/data
 
-ENTRYPOINT ["/bin/sh", "/usr/share/tomcat8/bin/catalina.sh", "run"]
+USER tomcat8
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
 
 #RUN useradd --create-home --shell /bin/sh phenotips
 
