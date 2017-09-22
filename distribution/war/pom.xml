@@ -44,7 +44,11 @@
       <type>war</type>
     </dependency>
 
-    <!-- Exclusions -->
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>xwiki-platform-cloud-blobstore-s3</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -119,7 +123,8 @@
                   com.xpn.xwiki.plugin.diff.DiffPlugin,\
                   com.xpn.xwiki.plugin.rightsmanager.RightsManagerPlugin,\
                   com.xpn.xwiki.plugin.jodatime.JodaTimePlugin,\
-                  com.xpn.xwiki.plugin.mailsender.MailSenderPlugin</xwikiCfgPlugins>
+                  com.xpn.xwiki.plugin.mailsender.MailSenderPlugin
+                </xwikiCfgPlugins>
                 <xwikiCfgVirtual>0</xwikiCfgVirtual>
                 <xwikiCfgVirtualUsepath>0</xwikiCfgVirtualUsepath>
                 <xwikiCfgEditCommentMandatory>0</xwikiCfgEditCommentMandatory>
@@ -127,31 +132,38 @@
                 <xwikiCfgDefaultBaseSkin>colibri</xwikiCfgDefaultBaseSkin>
                 <xwikiCfgEncoding>UTF-8</xwikiCfgEncoding>
                 <xwikiCfgAdditionalProperties>
-                  xwiki.plugin.watchlist.automaticwatch=none
-                  xwiki.authentication.group.allgroupimplicit=1
-                  xwiki.authentication.rightsclass=org.phenotips.security.authorization.ModularRightServiceImpl
-                  xwiki.section.edit=0
-                  xwiki.backlinks=0
-                  xwiki.showviewaction=0
-                  xwiki.defaultweb=data
-                  xwiki.usedefaultweb=1
-                  xwiki.usedefaultaction=0
-                  xwiki.monitor=0
-                  xwiki.store.attachment.hint=file
-                  xwiki.store.attachment.versioning.hint=file
-                  xwiki.store.attachment.recyclebin.hint=file
+xwiki.plugin.watchlist.automaticwatch=none
+xwiki.authentication.group.allgroupimplicit=1
+xwiki.authentication.rightsclass=org.phenotips.security.authorization.ModularRightServiceImpl
+xwiki.section.edit=0
+xwiki.backlinks=0
+xwiki.showviewaction=0
+xwiki.defaultweb=data
+xwiki.usedefaultweb=1
+xwiki.usedefaultaction=0
+xwiki.monitor=0
+xwiki.store.attachment.hint=file
+xwiki.store.attachment.versioning.hint=file
+xwiki.store.attachment.recyclebin.hint=file
+xwiki.store.attachments.blobstore=s3
+xwiki.store.attachments.blobstore.bucket=
+xwiki.store.attachments.blobstore.namespace=
+# Amazon Access Key ID
+xwiki.store.attachments.blobstore.identity=
+# Amazon Secret Access Key
+xwiki.store.attachments.blobstore.credential=
                 </xwikiCfgAdditionalProperties>
                 <xwikiPropertiesEnvironmentPermanentDirectory>/var/lib/phenotips/</xwikiPropertiesEnvironmentPermanentDirectory>
                 <xwikiPropertiesAdditionalProperties>
-                  model.reference.default.space=data
-                  extension.repositories=maven-central:maven:https://nexus.phenotips.org/nexus/content/groups/public/
-                  extension.repositories=maven-phenotips:maven:https://nexus.phenotips.org/nexus/content/repositories/releases/
-                  extension.repositories=phenotips.org:xwiki:https://phenotips.org/rest/
-                  activeinstalls.pingURL=https://stats.phenotips.org
-                  activeinstalls.ipFetchURL=https://phenotips.org/get/Stats/Id
+model.reference.default.space=data
+extension.repositories=maven-central:maven:https://nexus.phenotips.org/nexus/content/groups/public/
+extension.repositories=maven-phenotips:maven:https://nexus.phenotips.org/nexus/content/repositories/releases/
+extension.repositories=phenotips.org:xwiki:https://phenotips.org/rest/
+activeinstalls.pingURL=https://stats.phenotips.org
+activeinstalls.ipFetchURL=https://phenotips.org/get/Stats/Id
 
-                  crypto.encryption.systemPassword.provider=xwikiproperties
-                  crypto.encryption.systemPassword=ChangeMe
+crypto.encryption.systemPassword.provider=xwikiproperties
+crypto.encryption.systemPassword=ChangeMe
                 </xwikiPropertiesAdditionalProperties>
               </properties>
             </configuration>
@@ -233,25 +245,6 @@
           </execution>
         </executions>
       </plugin>
-      <!--<plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>${docker.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default</id>
-            <goals>
-              <goal>build</goal>
-              <goal>push</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <repository>nexus.gene42.com:20443/gene42/phenotips</repository>
-          <tag>gene42-phenotips-core-${project.version}</tag>
-          <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-        </configuration>
-      </plugin> -->
     </plugins>
   </build>
 </project>

@@ -56,9 +56,12 @@ COPY target/gene42-phenotips-core.war ./
 RUN unzip gene42-phenotips-core.war -d ./webapps/ROOT/
 RUN rm gene42-phenotips-core.war
 
+COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
+RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R $CATALINA_HOME
 
 #USER ${TOMCAT_USER}
 
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+ENTRYPOINT ["start-container.sh"]
+CMD []
