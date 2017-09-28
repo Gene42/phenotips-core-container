@@ -34,6 +34,12 @@
       <version>${phenotips.version}</version>
       <type>jar</type>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>gene42-phenotips-configs-default</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -70,6 +76,14 @@
                   <type>jar</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                   <destFileName>solr-configuration.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>gene42-phenotips-configs-default</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>gene42-phenotips-config.jar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

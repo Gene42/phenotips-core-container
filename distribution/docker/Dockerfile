@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8u131-jre-alpine
 
 MAINTAINER Sebastian Stanisor <sebastain@gene42.com>
 ENV TOMCAT_MAJOR 8
@@ -43,10 +43,11 @@ RUN set -x \
 	&& find ./bin/ -name '*.sh' -exec sed -ri 's|^#!/bin/sh$|#!/usr/bin/env bash|' '{}' +
 
 COPY target/solr-configuration.jar ./
+RUN mkdir -p /var/lib/phenotips/conf
 RUN mkdir -p /var/lib/phenotips/solr
 RUN unzip solr-configuration.jar -d /var/lib/phenotips/solr
 RUN rm solr-configuration.jar
-RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R /var/lib/phenotips/solr
+RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R /var/lib/phenotips/
 #RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R data
 
 RUN rm -r ./webapps/ROOT
@@ -60,7 +61,7 @@ COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
 RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R $CATALINA_HOME
 
-#USER ${TOMCAT_USER}
+USER ${TOMCAT_USER}
 
 EXPOSE 8080
 ENTRYPOINT ["start-container.sh"]

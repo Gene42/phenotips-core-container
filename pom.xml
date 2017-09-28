@@ -149,6 +149,7 @@
   </scm>
 
   <modules>
+    <module>configs</module>
     <module>distribution</module>
   </modules>
 </project>
