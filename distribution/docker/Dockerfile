@@ -38,7 +38,7 @@ RUN set -x \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* \
-  && adduser -D -u 1000 ${TOMCAT_USER} \
+  && adduser -D -u 9000 ${TOMCAT_USER} \
 	&& apk add --no-cache bash \
 	&& find ./bin/ -name '*.sh' -exec sed -ri 's|^#!/bin/sh$|#!/usr/bin/env bash|' '{}' +
 

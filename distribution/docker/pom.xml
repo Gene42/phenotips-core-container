@@ -82,7 +82,7 @@
                   <artifactId>gene42-phenotips-configs-default</artifactId>
                   <version>${project.version}</version>
                   <type>jar</type>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/config/</outputDirectory>
                   <destFileName>gene42-phenotips-config.jar</destFileName>
                 </artifactItem>
               </artifactItems>
