@@ -245,6 +245,23 @@ crypto.encryption.systemPassword=ChangeMe
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.2</version>
+        <executions>
+          <execution>
+            <id>collect</id>
+            <phase>package</phase>
+            <goals>
+              <goal>collect</goal>
+            </goals>
+            <configuration>
+               <outputFile>${project.build.directory}/extension-dependencies.txt</outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

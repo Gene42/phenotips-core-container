@@ -1,6 +1,6 @@
 #!/bin/sh
 
-container_name=gene42-phenotips-core-test
+container_name=test
 repository=gene42/gene42-phenotips-core
 tag=latest
 
