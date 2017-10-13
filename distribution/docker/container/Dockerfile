@@ -10,6 +10,15 @@ ENV PATH $CATALINA_HOME/bin:$PATH
 
 ENV PT_PERSISTENT_DIR /var/lib/phenotips
 
+# /
+# ├── /var/lib/phenotips/
+# │            ├── cache/
+# │            ├── extension/
+# │            ├── jobs/
+# │            ├── solr/
+# │            └── storage/
+# └── /usr/local/tomcat/
+
 ENV KEYS_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/KEYS"
 ENV TOMCAT_TGZ_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
 ENV TOMCAT_ASC_URL "${TOMCAT_TGZ_URL}.asc"
@@ -71,6 +80,9 @@ RUN mv webapps/phenotips webapps/ROOT
 # SOLR
 RUN mv standalone/standalone/data/solr ${PT_PERSISTENT_DIR}
 RUN rm -r ${PT_PERSISTENT_DIR}/solr/patients/
+
+# Local Extension REPO
+COPY target/gene42-phenotips-core-local-repository.zip ./
 
 # Other suff
 RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/

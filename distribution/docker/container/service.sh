@@ -265,7 +265,8 @@ install_() {
 
       sudo docker create \
              --name "${local_container_name_}" \
-             -p 8080:8080 -p 8009:8009 \
+             -p 127.0.0.1:8080:8080 -p 127.0.0.1:8009:8009 \
+             -i \
              -v ${install_container_home_}/conf:/var/lib/phenotips/conf \
              -v ${install_container_home_}/log:/usr/local/tomcat/logs \
              "${install_image_}" "${local_config_file_name_}" > /dev/null
