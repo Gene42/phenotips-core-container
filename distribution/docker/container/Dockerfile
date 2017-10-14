@@ -66,9 +66,6 @@ RUN mkdir -p ${PT_PERSISTENT_DIR}/conf
 RUN rm -r webapps/ROOT
 RUN mkdir -p webapps
 
-COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
-RUN chmod +x $CATALINA_HOME/bin/start-container.sh
-
 # Standalone (for the extansions, etc..)
 COPY target/gene42-phenotips-core-standalone.zip ./
 RUN unzip -d standalone gene42-phenotips-core-standalone.zip
@@ -90,9 +87,15 @@ RUN mv standalone/standalone/data/extension ${PT_PERSISTENT_DIR}/
 RUN mv standalone/standalone/data/storage ${PT_PERSISTENT_DIR}/
 
 RUN rm -r standalone
+RUN rm gene42-phenotips-core-standalone.zip
+RUN rm gene42-phenotips-core-local-repository.zip
 
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${PT_PERSISTENT_DIR}
+
+# Start Script
+COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
+RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 
 USER ${TOMCAT_USER}
 

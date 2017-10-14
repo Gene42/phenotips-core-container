@@ -19,12 +19,14 @@ ls -a ${config_dir}
 
 if [ ! -f "${config_file}" ]; then
    echo "Config file ${config_file} could not be found. Container will not start."
-   exit 1
+   #exit 1
 fi
 
-rm ${config_file}
+#rm ${config_file}
 
-ls -a ${config_dir}
+#ls -a ${config_dir}
+
+#CMD ["nginx", "-g", "daemon off;"]
 
 catalina.sh run
 
