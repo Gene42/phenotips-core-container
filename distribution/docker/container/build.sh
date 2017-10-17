@@ -4,7 +4,11 @@ container_name=test
 repository=gene42/gene42-phenotips-core
 tag=latest
 
-sudo docker rm "$container_name" > /dev/null
+if [ "$1" ]; then
+  tag="$1"
+fi
+
+#sudo docker rm "$container_name" > /dev/null
 
 sudo docker build -t ${repository}:${tag} .
 

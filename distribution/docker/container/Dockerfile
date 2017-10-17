@@ -9,6 +9,7 @@ ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 
 ENV PT_PERSISTENT_DIR /var/lib/phenotips
+ENV CATALINA_HOME /usr/local/tomcat
 
 # /
 # ├── /var/lib/phenotips/
@@ -75,8 +76,8 @@ RUN mv standalone/standalone/webapps/phenotips webapps
 RUN mv webapps/phenotips webapps/ROOT
 
 # SOLR
-RUN mv standalone/standalone/data/solr ${PT_PERSISTENT_DIR}
-RUN rm -r ${PT_PERSISTENT_DIR}/solr/patients/
+RUN rm -r standalone/standalone/data/solr/patients/
+RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
 
 # Local Extension REPO
 COPY target/gene42-phenotips-core-local-repository.zip ./
@@ -90,12 +91,19 @@ RUN rm -r standalone
 RUN rm gene42-phenotips-core-standalone.zip
 RUN rm gene42-phenotips-core-local-repository.zip
 
-RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
+# Change permissions for tomcat user
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${PT_PERSISTENT_DIR}
+
+RUN mkdir -p /var/lib/gene42/phenotips/conf
 
 # Start Script
 COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
 RUN chmod +x $CATALINA_HOME/bin/start-container.sh
+
+#RUN wget "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
+#RUN chmod +x wait-for-it.sh
+
+RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
 
 USER ${TOMCAT_USER}
 
