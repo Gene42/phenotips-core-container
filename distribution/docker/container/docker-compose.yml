@@ -15,6 +15,10 @@ services:
       - "8009"
     volumes:
       - lpac-pt-PROD_local-storage:/var/lib/phenotips/
+      - type: volume
+        source: lpac-pt-PROD_config
+        target: /usr/local/tomcat/
+        read_only: true
     cap_drop:
       - SYS_ADMIN
 
@@ -31,8 +35,10 @@ services:
       - "8009"
     volumes:
       - lpac-pt-STAGE_local-storage:/var/lib/phenotips/
-      - lpac-pt-STAGE_config:/usr/local/tomcat/
-      - pt-test:/var/lib/phenotips/cache
+      - type: volume
+        source: lpac-pt-STAGE_config
+        target: /usr/local/tomcat/
+        read_only: true
     cap_drop:
       - SYS_ADMIN
 

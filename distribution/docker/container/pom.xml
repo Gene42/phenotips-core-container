@@ -89,7 +89,7 @@
                   <version>${project.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-                  <destFileName>gene42-phenotips-core-standalone.zip</destFileName>
+                  <destFileName>gene42-phenotips-standalone.zip</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
@@ -97,7 +97,7 @@
                   <version>${project.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-                  <destFileName>gene42-phenotips-core-local-repository.zip</destFileName>
+                  <destFileName>gene42-phenotips-local-repository.zip</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

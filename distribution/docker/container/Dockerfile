@@ -5,11 +5,16 @@ MAINTAINER Sebastian Stanisor <sebastain@gene42.com>
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.5.20
 ENV TOMCAT_USER tomcat${TOMCAT_MAJOR}
+
+# Folders
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
-
 ENV PT_PERSISTENT_DIR /var/lib/phenotips
 ENV CATALINA_HOME /usr/local/tomcat
+
+# Files
+ENV PT_STANDALONE_ZIP gene42-phenotips-standalone.zip
+ENV LOCAL_REPO_ZIP gene42-phenotips-local-repository.zip
 
 # /
 # ├── /var/lib/phenotips/
@@ -67,9 +72,10 @@ RUN mkdir -p ${PT_PERSISTENT_DIR}/conf
 RUN rm -r webapps/ROOT
 RUN mkdir -p webapps
 
-# Standalone (for the extansions, etc..)
-COPY target/gene42-phenotips-core-standalone.zip ./
-RUN unzip -d standalone gene42-phenotips-core-standalone.zip
+# Standalone (for the extensions, etc..)
+COPY target/${PT_STANDALONE_ZIP} ./
+RUN unzip -d standalone ${PT_STANDALONE_ZIP}
+RUN rm ${PT_STANDALONE_ZIP}
 RUN temp_folder=$(ls standalone); mv standalone/${temp_folder} standalone/standalone
 
 RUN mv standalone/standalone/webapps/phenotips webapps
@@ -79,17 +85,17 @@ RUN mv webapps/phenotips webapps/ROOT
 RUN rm -r standalone/standalone/data/solr/patients/
 RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
 
-# Local Extension REPO
-COPY target/gene42-phenotips-core-local-repository.zip ./
-
 # Other suff
 RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/
 RUN mv standalone/standalone/data/extension ${PT_PERSISTENT_DIR}/
 RUN mv standalone/standalone/data/storage ${PT_PERSISTENT_DIR}/
 
 RUN rm -r standalone
-RUN rm gene42-phenotips-core-standalone.zip
-RUN rm gene42-phenotips-core-local-repository.zip
+
+# Local Extension REPO
+COPY target/${LOCAL_REPO_ZIP} ./
+RUN unzip ${LOCAL_REPO_ZIP} -d .m2
+RUN rm ${LOCAL_REPO_ZIP}
 
 # Change permissions for tomcat user
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${PT_PERSISTENT_DIR}
