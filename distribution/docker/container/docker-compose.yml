@@ -18,26 +18,26 @@ services:
       - type: volume
         source: lpac-pt-PROD_config
         target: /usr/local/tomcat/
-        read_only: true
+        #read_only: true
     cap_drop:
       - SYS_ADMIN
 
   # STAGE
   phenotips-stage:
     container_name: lpac-pt-STAGE
-    image: gene42/gene42-phenotips-core:2.3
+    image: gene42/gene42-phenotips-core:latest
     restart: "no"
-    #ports:
-    #    - "127.0.0.1:8081:8080"
-    #    - "127.0.0.1:8010:8009"
-    expose:
-      - "8080"
-      - "8009"
+    ports:
+        - "127.0.0.1:8081:8080"
+        - "127.0.0.1:8010:8009"
+    #expose:
+    #  - "8080"
+    #  - "8009"
     volumes:
       - lpac-pt-STAGE_local-storage:/var/lib/phenotips/
       - type: volume
-        source: lpac-pt-STAGE_config
-        target: /usr/local/tomcat/
+        source: gigi
+        target: /var/lib/gene42/phenotips
         read_only: true
     cap_drop:
       - SYS_ADMIN
@@ -59,4 +59,5 @@ volumes:
   lpac-pt-PROD_config:
   lpac-pt-STAGE_local-storage:
   lpac-pt-STAGE_config:
-  pt-test:
+  gigi:
+    external: true

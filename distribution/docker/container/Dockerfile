@@ -1,22 +1,13 @@
 FROM openjdk:8u131-jre-alpine
 
-MAINTAINER Sebastian Stanisor <sebastain@gene42.com>
-
-ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.5.20
-ENV TOMCAT_USER tomcat${TOMCAT_MAJOR}
-
-# Folders
-ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
-ENV PT_PERSISTENT_DIR /var/lib/phenotips
-ENV CATALINA_HOME /usr/local/tomcat
-
-# Files
-ENV PT_STANDALONE_ZIP gene42-phenotips-standalone.zip
-ENV LOCAL_REPO_ZIP gene42-phenotips-local-repository.zip
+LABEL maintainer="sebastain@gene42.com"
 
 # /
+# ├── /var/lib/gene42/phenotips/conf/
+# │                             └── WEB-INF/
+# │                                 ├── hybernate.cfg.xml
+# │                                 ├── xwiki.properties
+# │                                 └── xwiki.cfg
 # ├── /var/lib/phenotips/
 # │            ├── cache/
 # │            ├── extension/
@@ -24,6 +15,26 @@ ENV LOCAL_REPO_ZIP gene42-phenotips-local-repository.zip
 # │            ├── solr/
 # │            └── storage/
 # └── /usr/local/tomcat/
+#                ├── /
+#                └── webapps/ROOT/
+
+ENV TOMCAT_MAJOR 8
+ENV TOMCAT_VERSION 8.5.20
+ENV TOMCAT_USER tomcat${TOMCAT_MAJOR}
+ENV USER_ID 9000
+
+# Folders
+ENV CATALINA_HOME /usr/local/tomcat
+ENV PATH $CATALINA_HOME/bin:$PATH
+ENV PT_PERSISTENT_DIR /var/lib/phenotips
+ENV CATALINA_HOME /usr/local/tomcat
+ENV WEB_INF_DIR ${CATALINA_HOME}/webapps/ROOT/WEB-INF
+ENV GENE42_DIR /var/lib/gene42
+ENV GENE42_CONF_DIR ${GENE42_DIR}/phenotips/conf
+
+# Files
+ENV PT_STANDALONE_ZIP gene42-phenotips-standalone.zip
+ENV LOCAL_REPO_ZIP gene42-phenotips-local-repository.zip
 
 ENV KEYS_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/KEYS"
 ENV TOMCAT_TGZ_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
@@ -62,14 +73,14 @@ RUN set -x \
 	&& tar -xvf ${TOMCAT_TGZ_FILE} --strip-components=1 \
 	&& rm bin/*.bat \
 	&& rm ${TOMCAT_TGZ_FILE}* \
-  && adduser -D -u 9000 ${TOMCAT_USER} \
+  && adduser -D -u ${USER_ID} ${TOMCAT_USER} \
 	&& apk add --no-cache bash \
 	&& find ./bin/ -name '*.sh' -exec sed -ri 's|^#!/bin/sh$|#!/usr/bin/env bash|' '{}' +
 
 # Create PhenoTips persistent directory
-RUN mkdir -p ${PT_PERSISTENT_DIR}/conf
+RUN mkdir -p ${PT_PERSISTENT_DIR}
 
-RUN rm -r webapps/ROOT
+RUN rm -r webapps
 RUN mkdir -p webapps
 
 # Standalone (for the extensions, etc..)
@@ -82,8 +93,9 @@ RUN mv standalone/standalone/webapps/phenotips webapps
 RUN mv webapps/phenotips webapps/ROOT
 
 # SOLR
-RUN rm -r standalone/standalone/data/solr/patients/
-RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
+#UN rm -r standalone/standalone/data/solr/patients/
+RUN mv standalone/standalone/data/solr ${WEB_INF_DIR}
+#RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
 
 # Other suff
 RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/
@@ -100,16 +112,24 @@ RUN rm ${LOCAL_REPO_ZIP}
 # Change permissions for tomcat user
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${PT_PERSISTENT_DIR}
 
-RUN mkdir -p /var/lib/gene42/phenotips/conf
+# The location where the configurations used to start the container will be placed
+RUN mkdir -p ${GENE42_CONF_DIR}
+RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R  ${GENE42_DIR}
+
+# Remove confg files
+RUN rm ${WEB_INF_DIR}/hibernate.cfg.xml
+RUN rm ${WEB_INF_DIR}/xwiki.cfg
+RUN rm ${WEB_INF_DIR}/xwiki.properties
 
 # Start Script
-COPY src/main/sh/start-container.sh $CATALINA_HOME/bin
+COPY src/main/sh/start-container.sh ${CATALINA_HOME}/bin
 RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 
 #RUN wget "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
 #RUN chmod +x wait-for-it.sh
 
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
+#RUN chmod -R 600 ${CATALINA_HOME}
 
 USER ${TOMCAT_USER}
 

@@ -2,31 +2,48 @@
 
 set +x
 
-CATALINA_HOME=/usr/local/tomcat
+get_solr_version() {
+    _folder="$1"
 
-config_file_name=$1
-config_dir=/var/lib/phenotips/conf
-config_file=${config_dir}/${config_file_name}
+    #cat /var/lib/phenotips/solr/META-INF/maven/org.phenotips/solr-configuration/pom.properties | grep version= | cut -d '=' -f 2
+    _pom_prop_file_path="${_folder}/META-INF/maven/org.phenotips/solr-configuration/pom.properties"
+    if [ -f "${_pom_prop_file_path}" ]; then
+        _version=$(cat "${_pom_prop_file_path}" | grep version= | cut -d '=' -f 2)
+        echo "${_version}"
+    else
+        echo "Unknown"
+    fi    
+}
 
-ls ${CATALINA_HOME}
+ls "${CATALINA_HOME}"
 
 echo
 
-ls ${CATALINA_HOME}/logs
+ls "${CATALINA_HOME}/logs"
 
-echo "Contents of ${config_dir}"
-ls -a ${config_dir}
+echo "Contents of ${GENE42_CONF_DIR}"
+ls -a "${GENE42_CONF_DIR}"
 
-if [ ! -f "${config_file}" ]; then
-   echo "Config file ${config_file} could not be found. Container will not start."
-   #exit 1
+if [ ! -d "${GENE42_CONF_DIR}" ]; then
+   echo "Config dir ${GENE42_CONF_DIR} could not be found. Container will not start."
+   exit 1
 fi
 
-#rm ${config_file}
+cp -R "${GENE42_CONF_DIR}/WEB-INF/" "${CATALINA_HOME}/webapps/ROOT/"
 
-#ls -a ${config_dir}
+# Deal with Solr, because we can't overwrite ' solr.embedded.home=' :(
+solr_dir="${PT_PERSISTENT_DIR}/solr"
+if [ -d "${solr_dir}" ]; then
+    current_solr_version=$(get_solr_version "${solr_dir}")
+    echo "Removing old solr folder, version [${current_solr_version}]"
+    rm -r "${solr_dir}"
+fi
+new_solr_version=$(get_solr_version "${WEB_INF_DIR}/solr" )
+echo "Adding new solr folder, version [${new_solr_version}]"
 
-#CMD ["nginx", "-g", "daemon off;"]
+mv "${WEB_INF_DIR}/solr" "${PT_PERSISTENT_DIR}" 
+
+ls -a "${WEB_INF_DIR}"
 
 catalina.sh run
 
