@@ -26,6 +26,7 @@
 
   <modules>
     <module>hsqldb-database</module>
+    <module>ui</module>
     <module>war</module>
     <module>standalone</module>
     <module>docker</module>

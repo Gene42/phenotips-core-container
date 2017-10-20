@@ -121,7 +121,7 @@
       </snapshots>
     </pluginRepository>
     <pluginRepository>
-      <id>local</id>
+      <id>locals</id>
       <url>file://${env.HOME}/.m2/repository</url>
       <releases>
         <enabled>true</enabled>

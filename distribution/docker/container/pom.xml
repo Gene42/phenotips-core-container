@@ -23,29 +23,9 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-war</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>gene42-phenotips-core-standalone</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${phenotips.groupId}</groupId>
-      <artifactId>solr-configuration</artifactId>
-      <version>${phenotips.version}</version>
-      <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-configs-default</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -57,13 +37,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -75,14 +48,6 @@
             </goals>
             <configuration>
               <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>gene42-phenotips-configs-default</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <outputDirectory>${project.build.directory}/config/</outputDirectory>
-                  <destFileName>gene42-phenotips-config.jar</destFileName>
-                </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>gene42-phenotips-core-standalone</artifactId>
@@ -104,44 +69,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-remote-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>xwiki-platform-tool-configuration-resources</id>
-            <goals>
-              <goal>process</goal>
-            </goals>
-            <configuration>
-              <resourceBundles>
-                <resourceBundle>${phenotips.groupId}:solr-configuration:${phenotips.version}</resourceBundle>
-              </resourceBundles>
-              <outputDirectory>data/solr/</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!--<plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>${docker.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default</id>
-            <goals>
-              <goal>build</goal>
-              <goal>push</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <repository>nexus.gene42.com:20443/gene42/phenotips</repository>
-          <tag>gene42-phenotips-core-${project.version}</tag>
-          <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-        </configuration>
-      </plugin> -->
     </plugins>
   </build>
 </project>
