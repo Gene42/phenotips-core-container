@@ -12,7 +12,7 @@ get_solr_version() {
         echo "${_version}"
     else
         echo "Unknown"
-    fi    
+    fi
 }
 
 ls "${CATALINA_HOME}"
@@ -29,6 +29,7 @@ if [ ! -d "${GENE42_CONF_DIR}" ]; then
    exit 1
 fi
 
+# Config
 cp -R "${GENE42_CONF_DIR}/WEB-INF/" "${CATALINA_HOME}/webapps/ROOT/"
 
 # Deal with Solr, because we can't overwrite ' solr.embedded.home=' :(
@@ -41,7 +42,7 @@ fi
 new_solr_version=$(get_solr_version "${WEB_INF_DIR}/solr" )
 echo "Adding new solr folder, version [${new_solr_version}]"
 
-mv "${WEB_INF_DIR}/solr" "${PT_PERSISTENT_DIR}" 
+mv "${WEB_INF_DIR}/solr" "${PT_PERSISTENT_DIR}"
 
 ls -a "${WEB_INF_DIR}"
 

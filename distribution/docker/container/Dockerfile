@@ -98,9 +98,9 @@ RUN mv standalone/standalone/data/solr ${WEB_INF_DIR}
 #RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
 
 # Other suff
-RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/
-RUN mv standalone/standalone/data/extension ${PT_PERSISTENT_DIR}/
-RUN mv standalone/standalone/data/storage ${PT_PERSISTENT_DIR}/
+#RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/
+#RUN mv standalone/standalone/data/extension ${PT_PERSISTENT_DIR}/
+#RUN mv standalone/standalone/data/storage ${PT_PERSISTENT_DIR}/
 
 RUN rm -r standalone
 
@@ -121,12 +121,18 @@ RUN rm ${WEB_INF_DIR}/hibernate.cfg.xml
 RUN rm ${WEB_INF_DIR}/xwiki.cfg
 RUN rm ${WEB_INF_DIR}/xwiki.properties
 
+RUN rm ${WEB_INF_DIR}/classes/hibernate.cfg.xml
+RUN rm ${WEB_INF_DIR}/classes/xwiki.cfg
+RUN rm ${WEB_INF_DIR}/classes/xwiki.properties
+
 # Start Script
 COPY src/main/sh/start-container.sh ${CATALINA_HOME}/bin
 RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 
 #RUN wget "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
 #RUN chmod +x wait-for-it.sh
+
+#COPY ./logback.xml ${WEB_INF_DIR}/classes
 
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
 #RUN chmod -R 600 ${CATALINA_HOME}

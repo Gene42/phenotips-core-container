@@ -39,6 +39,16 @@
   <!-- We need to list repositories for finding the parent. Other settings will be correctly inherited from the parent. -->
   <repositories>
     <repository>
+      <id>locals-repo</id>
+      <url>file://${env.HOME}/.m2/repository</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>phenotips-releases</id>
       <name>PhenoTips Releases repository</name>
       <url>https://nexus.phenotips.org/nexus/content/repositories/releases/</url>
