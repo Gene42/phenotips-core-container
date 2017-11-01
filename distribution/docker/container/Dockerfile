@@ -33,8 +33,9 @@ ENV GENE42_DIR /var/lib/gene42
 ENV GENE42_CONF_DIR ${GENE42_DIR}/phenotips/conf
 
 # Files
-ENV PT_STANDALONE_ZIP gene42-phenotips-standalone.zip
-ENV LOCAL_REPO_ZIP gene42-phenotips-local-repository.zip
+ENV SOLR_JAR solr-configuration.jar
+ENV PT_WAR phenotips.war
+ENV LOCAL_REPO_ZIP phenotips-local-repository.zip
 
 ENV KEYS_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/KEYS"
 ENV TOMCAT_TGZ_URL "https://www.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz"
@@ -84,25 +85,25 @@ RUN rm -r webapps
 RUN mkdir -p webapps
 
 # Standalone (for the extensions, etc..)
-COPY target/${PT_STANDALONE_ZIP} ./
-RUN unzip -d standalone ${PT_STANDALONE_ZIP}
-RUN rm ${PT_STANDALONE_ZIP}
-RUN temp_folder=$(ls standalone); mv standalone/${temp_folder} standalone/standalone
+#COPY target/${PT_STANDALONE_ZIP} ./
+#RUN unzip -d standalone ${PT_STANDALONE_ZIP}
+#RUN rm ${PT_STANDALONE_ZIP}
+#RUN temp_folder=$(ls standalone); mv standalone/${temp_folder} standalone/standalone
+#RUN mv standalone/standalone/webapps/phenotips webapps
+#RUN mv webapps/phenotips webapps/ROOT
 
-RUN mv standalone/standalone/webapps/phenotips webapps
-RUN mv webapps/phenotips webapps/ROOT
+# WAR
+COPY target/${PT_WAR} ./
+RUN unzip ${PT_WAR} -d ./webapps/ROOT/
+RUN rm ${PT_WAR}
+
 
 # SOLR
-#UN rm -r standalone/standalone/data/solr/patients/
-RUN mv standalone/standalone/data/solr ${WEB_INF_DIR}
-#RUN mv standalone/standalone/data/solr ${CATALINA_HOME}/webapps/ROOT/WEB-INF
+COPY target/${SOLR_JAR} ./
+RUN unzip ${SOLR_JAR} -d ${WEB_INF_DIR}/solr
+RUN rm ${SOLR_JAR}
 
-# Other suff
-#RUN mv standalone/standalone/data/cache ${PT_PERSISTENT_DIR}/
-#RUN mv standalone/standalone/data/extension ${PT_PERSISTENT_DIR}/
-#RUN mv standalone/standalone/data/storage ${PT_PERSISTENT_DIR}/
-
-RUN rm -r standalone
+#RUN rm -r standalone
 
 # Local Extension REPO
 COPY target/${LOCAL_REPO_ZIP} ./
@@ -129,13 +130,7 @@ RUN rm ${WEB_INF_DIR}/classes/xwiki.properties
 COPY src/main/sh/start-container.sh ${CATALINA_HOME}/bin
 RUN chmod +x $CATALINA_HOME/bin/start-container.sh
 
-#RUN wget "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh"
-#RUN chmod +x wait-for-it.sh
-
-#COPY ./logback.xml ${WEB_INF_DIR}/classes
-
 RUN chown ${TOMCAT_USER}:${TOMCAT_USER} -R ${CATALINA_HOME}
-#RUN chmod -R 600 ${CATALINA_HOME}
 
 USER ${TOMCAT_USER}
 

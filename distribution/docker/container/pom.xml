@@ -19,13 +19,18 @@
   <packaging>pom</packaging>
 
   <dependencies>
-    <!-- Add dependencies on the XAR distributions so that we transitively include all JAR dependencies in the generated WAR -->
+    <dependency>
+      <groupId>${phenotips.groupId}</groupId>
+      <artifactId>solr-configuration</artifactId>
+      <version>${phenotips.version}</version>
+      <type>jar</type>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-standalone</artifactId>
+      <artifactId>gene42-phenotips-core-war</artifactId>
       <version>${project.version}</version>
-      <type>zip</type>
+      <type>war</type>
     </dependency>
 
     <dependency>
@@ -49,12 +54,20 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>gene42-phenotips-core-standalone</artifactId>
-                  <version>${project.version}</version>
-                  <type>zip</type>
+                  <groupId>${phenotips.groupId}</groupId>
+                  <artifactId>solr-configuration</artifactId>
+                  <version>${phenotips.version}</version>
+                  <type>jar</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-                  <destFileName>gene42-phenotips-standalone.zip</destFileName>
+                  <destFileName>solr-configuration.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>gene42-phenotips-core-war</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>phenotips.war</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
@@ -62,7 +75,7 @@
                   <version>${project.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
-                  <destFileName>gene42-phenotips-local-repository.zip</destFileName>
+                  <destFileName>phenotips-local-repository.zip</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
