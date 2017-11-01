@@ -18,7 +18,19 @@
   <name>Gene42 - PhenoTips Core - Docker Image</name>
   <packaging>pom</packaging>
 
+  <properties>
+    <image-name>gene42-phenotips-core</image-name>
+    <repo-name>gene42</repo-name>
+  </properties>
+
   <dependencies>
+    <dependency>
+      <groupId>com.gene42.devops</groupId>
+      <artifactId>gene42-ops-docker-modules-phenotips</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <type>jar</type>
+    </dependency>
+
     <dependency>
       <groupId>${phenotips.groupId}</groupId>
       <artifactId>solr-configuration</artifactId>
@@ -48,6 +60,26 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
+            <phase>package</phase>
+            <id>unpack</id>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.gene42.devops</groupId>
+                  <artifactId>gene42-ops-docker-modules-phenotips</artifactId>
+                  <version>1.0.0-SNAPSHOT</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <phase>package</phase>
+            <id>copy</id>
             <goals>
               <goal>copy</goal>
             </goals>
@@ -79,6 +111,42 @@
                 </artifactItem>
               </artifactItems>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.gene42.devops</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <configuration>
+          <imageName>${repo-name}/${image-name}</imageName>
+          <dockerDirectory>${project.build.directory}</dockerDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>build-image</id>
+            <phase>install</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>tag-image</id>
+            <phase>install</phase>
+            <goals>
+              <goal>tag</goal>
+            </goals>
+            <configuration>
+              <image>${image-name}</image>
+              <newName>${repo-name}/${image-name}:${project.version}</newName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>clean</id>
+            <phase>install</phase>
+            <goals>
+              <goal>removeDanglingImages</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
