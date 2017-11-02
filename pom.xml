@@ -130,16 +130,6 @@
         <checksumPolicy>fail</checksumPolicy>
       </snapshots>
     </pluginRepository>
-    <pluginRepository>
-      <id>locals</id>
-      <url>file://${env.HOME}/.m2/repository</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
   </pluginRepositories>
 
   <distributionManagement>

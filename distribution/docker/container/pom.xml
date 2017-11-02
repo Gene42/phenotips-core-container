@@ -137,7 +137,7 @@
               <goal>tag</goal>
             </goals>
             <configuration>
-              <image>${image-name}</image>
+              <image>${repo-name}/${image-name}</image>
               <newName>${repo-name}/${image-name}:${project.version}</newName>
             </configuration>
           </execution>
