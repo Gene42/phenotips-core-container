@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * This file is subject to the terms and conditions defined in file LICENSE,
- * which is part of this source code package.
- *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.gene42.phenotips</groupId>
     <artifactId>gene42-phenotips-core-docker</artifactId>
-    <version>1.3.2-SNAPSHOT</version>
+    <version>1.3.6-SNAPSHOT</version>
   </parent>
-  <artifactId>gene42-phenotips-core-docker-container</artifactId>
+
+  <artifactId>gene42-phenotips-core-docker-image</artifactId>
+
   <name>Gene42 - PhenoTips Core - Docker Image</name>
   <packaging>pom</packaging>
 
   <properties>
-    <image-name>gene42-phenotips-core</image-name>
+    <image-name>phenotips</image-name>
     <repo-name>gene42</repo-name>
+    <tag.suffix>core</tag.suffix>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.gene42.devops</groupId>
       <artifactId>gene42-ops-docker-modules-phenotips</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0</version>
       <type>jar</type>
     </dependency>
 
@@ -40,14 +52,14 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-war</artifactId>
+      <artifactId>${warId}</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-local-repository</artifactId>
+      <artifactId>${local.repo.id}</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
     </dependency>
@@ -60,7 +72,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
+            <phase>prepare-package</phase>
             <id>unpack</id>
             <goals>
               <goal>unpack</goal>
@@ -70,7 +82,7 @@
                 <artifactItem>
                   <groupId>com.gene42.devops</groupId>
                   <artifactId>gene42-ops-docker-modules-phenotips</artifactId>
-                  <version>1.0.0-SNAPSHOT</version>
+                  <version>1.0.0</version>
                   <type>jar</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                 </artifactItem>
@@ -78,7 +90,7 @@
             </configuration>
           </execution>
           <execution>
-            <phase>package</phase>
+            <phase>prepare-package</phase>
             <id>copy</id>
             <goals>
               <goal>copy</goal>
@@ -95,7 +107,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>gene42-phenotips-core-war</artifactId>
+                  <artifactId>${warId}</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
@@ -103,7 +115,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>gene42-phenotips-core-local-repository</artifactId>
+                  <artifactId>${local.repo.id}</artifactId>
                   <version>${project.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
@@ -125,25 +137,25 @@
         <executions>
           <execution>
             <id>build-image</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>build</goal>
             </goals>
           </execution>
           <execution>
             <id>tag-image</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>tag</goal>
             </goals>
             <configuration>
               <image>${repo-name}/${image-name}</image>
-              <newName>${repo-name}/${image-name}:${project.version}</newName>
+              <newName>${repo-name}/${image-name}:${project.version}-${tag.suffix}</newName>
             </configuration>
           </execution>
           <execution>
             <id>clean</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>removeDanglingImages</goal>
             </goals>

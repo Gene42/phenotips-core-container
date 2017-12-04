@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * This file is subject to the terms and conditions defined in file LICENSE,
- * which is part of this source code package.
- *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>com.gene42.phenotips</groupId>
     <artifactId>gene42-phenotips-core-docker</artifactId>
-    <version>1.3.2-SNAPSHOT</version>
+    <version>1.3.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gene42-phenotips-core-local-repository</artifactId>
+  <artifactId>gene42-phenotips-core-docker-local-repository</artifactId>
 
   <name>Gene42 - PhenoTips Core - Docker - Local Repository</name>
   <packaging>pom</packaging>
   <description>A wrapper container all xar and war dependencies</description>
 
-
   <dependencies>
     <!-- Gene42 Dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-war</artifactId>
+      <artifactId>${warId}</artifactId>
       <version>${project.version}</version>
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>gene42-phenotips-core-war</artifactId>
+      <artifactId>${warId}</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
@@ -50,10 +57,10 @@
       <plugin>
         <groupId>com.gene42.devops</groupId>
         <artifactId>gene42-devops-local-repo-gen</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>generate</goal>
             </goals>
@@ -78,6 +85,7 @@
         </configuration>
         <executions>
           <execution>
+            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
