@@ -32,7 +32,7 @@
     <xwiki.war.legacy.excludes />
 
     <!-- The default UI associated to this WAR -->
-    <xwiki.extension.distribution.ui>com.gene42.phenotips:gene42-phenotips-core-ui</xwiki.extension.distribution.ui>    
+    <xwiki.extension.distribution.ui>com.gene42.phenotips:gene42-phenotips-core-ui</xwiki.extension.distribution.ui>
   </properties>
 
   <dependencies>
@@ -58,7 +58,13 @@
       <artifactId>xwiki-platform-cloud-blobstore-s3</artifactId>
       <version>1.1</version>
     </dependency>
-   
+
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>xwiki-platform-cloud-blobstore-attachments</artifactId>
+      <version>1.1</version>
+    </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gene42-phenotips-core-ui</artifactId>
